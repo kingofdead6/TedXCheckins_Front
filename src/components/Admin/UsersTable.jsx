@@ -223,6 +223,12 @@ function UserTable() {
                       Phone
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Team
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Role in Team
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Role
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -247,6 +253,12 @@ function UserTable() {
                         {user.phone || 'Not provided'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                        {user.team || 'N/A'}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                        {user.roleInTeam || 'N/A'}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                         <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                           user.role === 'admin' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800'
                         }`}>
@@ -263,7 +275,7 @@ function UserTable() {
                             whileHover="hover"
                             whileTap={{ scale: 0.95 }}
                           >
-                            <FiTrash2 className="mr-1" />
+                            <FiTrash2 className="mr-2" />
                             Delete
                           </motion.button>
                         )}
@@ -277,17 +289,19 @@ function UserTable() {
 
           {filteredUsers.length === 0 && (
             <motion.div 
-              className="mt-8 text-center text-gray-500 py-12"
+              className="mt-8 text-center text-gray-600 py-12"
               variants={elementVariants}
             >
-              <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+              <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" 
+                stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" 
+                  strokeWidth={1} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
               </svg>
-              <h3 className="mt-2 text-lg font-medium">
+              <h3 className="mt-2 text-lg font-semibold">
                 {searchTerm ? 'No matching users found' : 'No users found'}
               </h3>
-              <p className="mt-1">
-                {searchTerm ? 'Try a different search term' : 'No users available'}
+              <p className="mt-1 text-sm sm:text-base">
+                {searchTerm ? 'Try a different search term' : 'No users available.'}
               </p>
             </motion.div>
           )}
@@ -296,15 +310,16 @@ function UserTable() {
 
       {/* Delete Confirmation Modal */}
       <AnimatePresence>
-        {showDeleteModal && (
+        {showDeleteModal && 
           <motion.div
-            className="fixed inset-0 bg-[#0000006d] backdrop-blur-md flex items-center justify-center z-50"
+            className="fixed inset-0 bg-[#0000006d] backdrop-blur-sm flex items-center justify-center z-50"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={handleClickOutside}
             role="dialog"
             aria-labelledby="delete-modal-title"
+            aria-describedby="modal-description"
           >
             <motion.div
               ref={modalRef}
@@ -314,44 +329,44 @@ function UserTable() {
               animate="visible"
               exit="hidden"
             >
-              <h3
-                id="delete-modal-title"
-                className="text-xl sm:text-2xl font-bold text-[#d20000] mb-4 text-center"
-              >
+              <h3 id="delete-modal-title" class="text-xl sm:text-2xl font-semibold text-[#d20000] mb-4 text-center">
                 Confirm Deletion
               </h3>
-              <p className="text-gray-700 text-sm sm:text-base mb-6 text-center">
+              <p id="modal-description" className="text-gray-600 text-sm sm:text-base mb-6 text-center">
                 Are you sure you want to delete {selectedUser.name}?
                 This action cannot be undone.
               </p>
               <div className="flex gap-3">
                 <motion.button
                   onClick={handleDelete}
-                  className="cursor-pointer flex-1 bg-[#d20000] text-white p-3 rounded-xl font-semibold hover:bg-red-800 transition duration-300"
-                  aria-label="Confirm delete user"
+                  className="cursor-pointer flex-1 bg-[#d20000] text-white sm:p-4 rounded-xl p-2 font-semibold hover:bg-red-800 transition duration-300"
+                  aria-label="Confirm delete user action"
                   variants={buttonVariants}
                   whileHover="hover"
                   whileTap={{ scale: 0.95 }}
                 >
                   Confirm
-                </motion.button>
-                <motion.button
-                  onClick={closeDeleteModal}
-                  className="cursor-pointer flex-1 bg-gray-200 text-gray-800 p-3 rounded-xl font-semibold hover:bg-gray-300 transition duration-300"
-                  aria-label="Cancel delete user"
-                  variants={buttonVariants}
-                  whileHover="hover"
-                  whileTap={{ scale: 0.95 }}
+                </motion.button
                 >
-                  Cancel
-                </motion.button>
+                  <motion.button
+                    onClick={() => closeDeleteModal()}
+                    className="cursor-pointer flex-1 bg-gray-200 text-gray-800 sm:p-4 rounded-xl p-2 font-semibold hover:bg-gray-300 transition duration-200"
+                    aria-label="Cancel delete user action"
+                    variants={buttonVariants}
+                    whileHover="hover"
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    Cancel
+                  </motion.button>
+                
               </div>
             </motion.div>
           </motion.div>
-        )}
+        }
       </AnimatePresence>
     </div>
   );
 }
+
 
 export default UserTable;

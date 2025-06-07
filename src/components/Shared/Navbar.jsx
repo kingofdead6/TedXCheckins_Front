@@ -85,6 +85,9 @@ function Navbar() {
     open: { opacity: 1, height: 'auto', transition: { duration: 0.3, ease: 'easeInOut' } },
   };
 
+  const buttonVariants = {
+    hover: { scale: 1.05, transition: { duration: 0.2 } },
+  };
 
   // Determine if on main page
   const isMainPage = location.pathname === '/';
@@ -165,6 +168,14 @@ function Navbar() {
                             </Link>
                           </motion.div>
                           <motion.div variants={linkVariants} whileHover="hover">
+                            <Link
+                              to="/register"
+                              className="bg-transparent border-2 border-[#e62b1e] rounded-xl px-4 py-2 hover:bg-[#e62b1e] hover:text-white transition-colors duration-300"
+                            >
+                              Register
+                            </Link>
+                          </motion.div>
+                          <motion.div variants={linkVariants} whileHover="hover">
                             <button
                               onClick={handleLogout}
                               className="cursor-pointer bg-transparent border-2 border-[#e62b1e] rounded-xl px-4 py-2 hover:bg-[#e62b1e] hover:text-white transition-colors duration-300"
@@ -203,24 +214,14 @@ function Navbar() {
                       )}
                     </>
                   ) : (
-                    <>
-                      <motion.div variants={linkVariants} whileHover="hover">
-                        <Link
-                          to="/login"
-                          className="bg-transparent border-2 border-[#e62b1e] rounded-xl px-4 py-2 hover:bg-[#e62b1e] hover:text-white transition-colors duration-300"
-                        >
-                          Login
-                        </Link>
-                      </motion.div>
-                      <motion.div variants={linkVariants} whileHover="hover">
-                        <Link
-                          to="/register"
-                          className="bg-transparent border-2 border-[#e62b1e] rounded-xl px-4 py-2 hover:bg-[#e62b1e] hover:text-white transition-colors duration-300"
-                        >
-                          Register
-                        </Link>
-                      </motion.div>
-                    </>
+                    <motion.div variants={linkVariants} whileHover="hover">
+                      <Link
+                        to="/login"
+                        className="bg-transparent border-2 border-[#e62b1e] rounded-xl px-4 py-2 hover:bg-[#e62b1e] hover:text-white transition-colors duration-300"
+                      >
+                        Login
+                      </Link>
+                    </motion.div>
                   )}
                 </div>
               </div>
@@ -230,7 +231,7 @@ function Navbar() {
             <AnimatePresence>
               {isMenuOpen && (
                 <motion.div
-                  className="md:hidden bg-white bg-opacity-95 rounded-xl border border-red-100 p-4 mt-2 shadow-lg"
+                  className="md:hidden bg-gray-50 bg-opacity-95 rounded-xl border border-red-100 p-4 mt-2 shadow-lg"
                   initial="closed"
                   animate="open"
                   exit="closed"
@@ -242,31 +243,38 @@ function Navbar() {
                         <div className="flex flex-col space-y-2">
                           <Link
                             to="/admin/events"
-                            className="bg-transparent border-2 border-[#e62b1e] rounded-xl px-4 py-2 hover:bg-[#e62b1e] hover:text-white transition-colors duration-300 text-center"
+                            className="bg-transparent border-2 border-[#e62b1e] rounded-xl px-4 py-2 hover:bg-[#e62b1e] hover:text-white transition-colors duration-200 text-center"
                             onClick={() => setIsMenuOpen(false)}
                           >
                             Manage Events
                           </Link>
                           <Link
                             to="/admin/users"
-                            className="bg-transparent border-2 border-[#e62b1e] rounded-xl px-4 py-2 hover:bg-[#e62b1e] hover:text-white transition-colors duration-300 text-center"
+                            className="bg-transparent border-2 border-[#e62b1e] rounded-xl px-4 py-2 hover:bg-[#e62b1e] hover:text-white transition-colors duration-200 text-center"
                             onClick={() => setIsMenuOpen(false)}
                           >
                             Manage Users
                           </Link>
                           <Link
                             to="/admin/statistics"
-                            className="bg-transparent border-2 border-[#e62b1e] rounded-xl px-4 py-2 hover:bg-[#e62b1e] hover:text-white transition-colors duration-300 text-center"
+                            className="bg-transparent border-2 border-[#e62b1e] rounded-xl px-4 py-2 hover:bg-[#e62b1e] hover:text-white transition-colors duration-200 text-center"
                             onClick={() => setIsMenuOpen(false)}
                           >
                             Statistics
+                          </Link>
+                          <Link
+                            to="/register"
+                            className="bg-transparent border-2 border-[#e62b1e] rounded-xl px-4 py-2 hover:bg-[#e62b1e] hover:text-white transition-colors duration-200 text-center"
+                            onClick={() => setIsMenuOpen(false)}
+                          >
+                            Register
                           </Link>
                           <button
                             onClick={() => {
                               handleLogout();
                               setIsMenuOpen(false);
                             }}
-                            className="cursor-pointer bg-transparent border-2 border-[#e62b1e] rounded-xl px-4 py-2 hover:bg-[#e62b1e] hover:text-white transition-colors duration-300 text-center"
+                            className="cursor-pointer bg-transparent border-2 border-[#e62b1e] rounded-xl px-4 py-2 hover:bg-[#e62b1e] hover:text-white transition-colors duration-200 text-center"
                           >
                             Logout
                           </button>
@@ -275,14 +283,14 @@ function Navbar() {
                         <div className="flex flex-col space-y-2">
                           <Link
                             to="/events"
-                            className="bg-transparent border-2 border-[#e62b1e] rounded-xl px-4 py-2 hover:bg-[#e62b1e] hover:text-white transition-colors duration-300 text-center"
+                            className="bg-transparent border-2 border-[#e62b1e] rounded-xl px-4 py-2 hover:bg-[#e62b1e] hover:text-white transition-colors duration-200 text-center"
                             onClick={() => setIsMenuOpen(false)}
                           >
                             Events
                           </Link>
                           <Link
                             to="/profile"
-                            className="bg-transparent border-2 border-[#e62b1e] rounded-xl px-4 py-2 hover:bg-[#e62b1e] hover:text-white transition-colors duration-300 text-center"
+                            className="bg-transparent border-2 border-[#e62b1e] rounded-xl px-4 py-2 hover:bg-[#e62b1e] hover:text-white transition-colors duration-200 text-center"
                             onClick={() => setIsMenuOpen(false)}
                           >
                             Profile
@@ -292,7 +300,7 @@ function Navbar() {
                               handleLogout();
                               setIsMenuOpen(false);
                             }}
-                            className="cursor-pointer bg-transparent border-2 border-[#e62b1e] rounded-xl px-4 py-2 hover:bg-[#e62b1e] hover:text-white transition-colors duration-300 text-center"
+                            className="cursor-pointer bg-transparent border-2 border-[#e62b1e] rounded-xl px-4 py-2 hover:bg-[#e62b1e] hover:text-white transition-colors duration-200 text-center"
                           >
                             Logout
                           </button>
@@ -303,17 +311,10 @@ function Navbar() {
                     <div className="flex flex-col space-y-2">
                       <Link
                         to="/login"
-                        className="bg-transparent border-2 border-[#e62b1e] rounded-xl px-4 py-2 hover:bg-[#e62b1e] hover:text-white transition-colors duration-300 text-center"
+                        className="bg-transparent border-2 border-[#e62b1e] rounded-xl px-4 py-2 hover:bg-[#e62b1e] hover:text-white transition-colors duration-200 text-center"
                         onClick={() => setIsMenuOpen(false)}
                       >
                         Login
-                      </Link>
-                      <Link
-                        to="/register"
-                        className="bg-transparent border-2 border-[#e62b1e] rounded-xl px-4 py-2 hover:bg-[#e62b1e] hover:text-white transition-colors duration-300 text-center"
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        Register
                       </Link>
                     </div>
                   )}

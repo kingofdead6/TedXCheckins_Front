@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import { API_BASE_URL } from '../../../api';
 
@@ -10,8 +10,39 @@ function RegisterForm() {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [team, setTeam] = useState('');
+  const [roleInTeam, setRoleInTeam] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
+
+  // Check if user is admin
+  useEffect(() => {
+    const checkAdmin = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          navigate('/login');
+          return;
+        }
+        const res = await axios.get(`${API_BASE_URL}/api/auth/profile`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (res.data.role !== 'admin') {
+          setError('Only admins can register new users');
+          navigate('/login');
+        } else {
+          setIsAdmin(true);
+        }
+      } catch (err) {
+        console.error('Admin check error:', err.response?.data);
+        setError('Authentication failed');
+        navigate('/login');
+      }
+    };
+    checkAdmin();
+  }, [navigate]);
 
   // Password validation checks
   const isPasswordValid = {
@@ -20,24 +51,47 @@ function RegisterForm() {
     number: /[0-9]/.test(password),
   };
 
-  // Check if form is valid (all fields filled and password meets criteria)
-  const isFormValid = name.trim() !== '' && email.trim() !== '' && phone.trim() !== '' && password.trim() !== '' && isPasswordValid.length && isPasswordValid.uppercase && isPasswordValid.number;
+  // Form validation
+  const isFormValid =
+    name.trim() !== '' &&
+    email.trim() !== '' &&
+    phone.trim() !== '' &&
+    password.trim() !== '' &&
+    team !== '' &&
+    roleInTeam.trim() !== '' &&
+    isPasswordValid.length &&
+    isPasswordValid.uppercase &&
+    isPasswordValid.number;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!isFormValid) return; // Prevent submission if form is invalid
+    if (!isFormValid) return;
     try {
-      const res = await axios.post(`${API_BASE_URL}/api/auth/register`, {
+      await axios.post(`${API_BASE_URL}/api/auth/register`, {
         name,
         email,
         phone,
         password,
+        team,
+        roleInTeam,
+        role: 'user'
       });
-      localStorage.setItem('token', res.data.token);
-      navigate('/login', { replace: true });
+      // Clear form fields
+      setName('');
+      setEmail('');
+      setPhone('');
+      setPassword('');
+      setTeam('');
+      setRoleInTeam('');
+      // Show success message
+      setSuccess('User added successfully');
+      setError('');
+      // Clear success message after 5 seconds
+      setTimeout(() => setSuccess(''), 5000);
     } catch (err) {
       console.error('Registration error:', err.response?.data || err.message);
       setError(err.response?.data?.message || 'Registration failed');
+      setSuccess('');
     }
   };
 
@@ -45,20 +99,12 @@ function RegisterForm() {
     setShowPassword(!showPassword);
   };
 
-  // Animation variants for form elements
+  // Animation variants
   const formVariants = {
     hidden: { opacity: 0, y: 50 },
-    visible: { 
-      opacity: 1, 
-      y: 0, 
-      transition: { 
-        duration: 0.8, 
-        ease: 'easeOut' 
-      }
-    }
+    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: 'easeOut' } }
   };
 
-  // Animation variants for card hover
   const cardVariants = {
     initial: { scale: 1, boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' },
     hover: { 
@@ -68,16 +114,32 @@ function RegisterForm() {
     }
   };
 
-  // Animation for button hover
   const buttonVariants = {
-    hover: { 
-      scale: 1.05, 
-      transition: { duration: 0.2 }
-    }
+    hover: { scale: 1.05, transition: { duration: 0.2 } }
   };
 
+  const messageVariants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
+    exit: { opacity: 0, y: -20, transition: { duration: 0.3 } }
+  };
+
+  if (!isAdmin && error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <motion.p
+          className="text-red-900 text-center text-lg"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          {error}
+        </motion.p>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen flex items-center justify-center  p-4">
+    <div className="min-h-screen flex items-center justify-center p-4">
       <motion.div 
         className="w-full max-w-sm sm:max-w-md bg-white bg-opacity-95 rounded-3xl border border-red-100 p-6 sm:p-8"
         initial="initial"
@@ -88,16 +150,32 @@ function RegisterForm() {
           className="text-2xl sm:text-3xl font-bold text-center mb-4 sm:mb-6 text-[#d20000]"
           variants={formVariants}
         >
-          Register for TEDx Check-ins
+          Register New User
         </motion.h2>
-        {error && (
-          <motion.p 
-            className="text-red-900 text-center mb-4 text-sm sm:text-base"
-            variants={formVariants}
-          >
-            {error}
-          </motion.p>
-        )}
+        <AnimatePresence>
+          {success && (
+            <motion.p 
+              className="text-green-600 text-center mb-4 text-sm sm:text-base"
+              variants={messageVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+            >
+              {success}
+            </motion.p>
+          )}
+          {error && (
+            <motion.p 
+              className="text-red-900 text-center mb-4 text-sm sm:text-base"
+              variants={messageVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+            >
+              {error}
+            </motion.p>
+          )}
+        </AnimatePresence>
         <form onSubmit={handleSubmit} className="space-y-5">
           <motion.div variants={formVariants}>
             <label htmlFor="name" className="block text-sm font-semibold text-gray-800 mb-1">
@@ -108,9 +186,10 @@ function RegisterForm() {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Enter your name"
+              placeholder="Enter name"
               className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#ff7b7b] focus:border-[#ff7b7b] transition duration-300"
               required
+              aria-required="true"
             />
           </motion.div>
           <motion.div variants={formVariants}>
@@ -122,9 +201,10 @@ function RegisterForm() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
+              placeholder="Enter email"
               className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#ff7b7b] focus:border-[#ff7b7b] transition duration-300"
               required
+              aria-required="true"
             />
           </motion.div>
           <motion.div variants={formVariants}>
@@ -136,9 +216,40 @@ function RegisterForm() {
               type="tel"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              placeholder="Enter your phone number"
+              placeholder="Enter phone number"
               className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#ff7b7b] focus:border-[#ff7b7b] transition duration-300"
               required
+              aria-required="true"
+            />
+          </motion.div>
+          <motion.div variants={formVariants}>
+            <label htmlFor="team" className="block text-sm font-semibold text-gray-800 mb-1">
+              Team
+            </label>
+            <input
+              id="team"
+              type='text'
+              placeholder='Enter team name'
+              value={team}
+              onChange={(e) => setTeam(e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#ff7b7b] focus:border-[#ff7b7b] transition duration-300"
+              required
+              aria-required="true"
+            />
+          </motion.div>
+          <motion.div variants={formVariants}>
+            <label htmlFor="roleInTeam" className="block text-sm font-semibold text-gray-800 mb-1">
+              Role in Team
+            </label>
+            <input
+              id="roleInTeam"
+              type="text"
+              value={roleInTeam}
+              onChange={(e) => setRoleInTeam(e.target.value)}
+              placeholder="Enter role in team"
+              className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#ff7b7b] focus:border-[#ff7b7b] transition duration-300"
+              required
+              aria-required="true"
             />
           </motion.div>
           <motion.div variants={formVariants}>
@@ -151,9 +262,10 @@ function RegisterForm() {
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
+                placeholder="Enter password"
                 className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#ff7b7b] focus:border-[#ff7b7b] transition duration-300"
                 required
+                aria-required="true"
               />
               <button
                 type="button"
@@ -188,12 +300,12 @@ function RegisterForm() {
           <motion.div variants={formVariants}>
             <motion.button
               type="submit"
-              className="w-full bg-[#d20000] text-white p-3 rounded-xl cursor-pointer hover:bg-red-800 text-base sm:text-lg font-semibold transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="cursor-pointer w-full bg-[#d20000] text-white p-3 rounded-xl hover:bg-red-800 text-lg font-semibold transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={!isFormValid}
               variants={buttonVariants}
-              whileHover={isFormValid ? 'hover' : {}}
+              whileHover={isFormValid ? 'hover' : ''}
             >
-              Register
+              Register User
             </motion.button>
           </motion.div>
         </form>
@@ -201,9 +313,9 @@ function RegisterForm() {
           className="text-center text-sm text-gray-600 mt-5"
           variants={formVariants}
         >
-          Already have an account?{' '}
-          <Link to="/login" className="text-[#d20000] hover:underline font-medium">
-            Login here
+          Manage existing users?{' '}
+          <Link to="/admin/users" className="text-[#d20000] hover:underline font-semibold">
+            Go to Users
           </Link>
         </motion.p>
       </motion.div>

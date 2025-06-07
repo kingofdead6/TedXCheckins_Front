@@ -35,16 +35,19 @@ function EventCard({ event }) {
     Finished: 'bg-gray-100 text-gray-800',
   };
 
+  // Debugging CheckinsResponsible
+  console.log('Event data in EventCard:', event);
+
   return (
     <motion.div
-      className="relative overflow-hidden bg-white rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 h-full flex flex-col"
+      className="relative overflow-hidden bg-white rounded-lg shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-200 h-full flex flex-col"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
       whileHover={{ y: -5 }}
     >
       {/* TEDx red accent bar */}
-      <div className="absolute top-0 left-0 w-full h-2 bg-[#e62b1e]"></div>
+      <div className="absolute top-0 left-0 w-full h-2 bg-red-600"></div>
 
       <div className="p-6 flex flex-col flex-grow">
         {/* Event State Badge */}
@@ -77,6 +80,54 @@ function EventCard({ event }) {
           <span>{formattedDate} • {formattedTime}</span>
         </div>
 
+        {/* Event Location */}
+        <div className="flex items-center text-sm text-gray-500 mb-2">
+          <svg
+            className="w-4 h-4 mr-1"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"
+            />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+            />
+          </svg>
+          <span>{event.location || 'Location not specified'}</span>
+        </div>
+
+        {/* Check-in Responsible */}
+        <div className="flex items-center text-sm text-gray-500 mb-2">
+          <svg
+            className="w-4 h-4 mr-1"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+            />
+          </svg>
+          <span>
+            {event.CheckinsResponsible && Array.isArray(event.CheckinsResponsible) && event.CheckinsResponsible.length > 0
+              ? event.CheckinsResponsible.join(', ')
+              : 'No responsible assigned'}
+          </span>
+        </div>
+
         {/* Event Title */}
         <h3 className="text-xl font-bold text-gray-800 mb-3">{event.title}</h3>
 
@@ -87,7 +138,7 @@ function EventCard({ event }) {
         <div className="mt-auto">
           <Link
             to={`/events/${event._id}/attendees`}
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#e62b1e] hover:bg-[#c8241a] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
           >
             View Attendees
             <svg

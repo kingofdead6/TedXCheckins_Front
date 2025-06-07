@@ -50,13 +50,13 @@ function HomeContent() {
           className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 sm:mb-6"
           variants={textVariants}
         >
-          TED<span className="text-[#ff0000]">x</span> Algeria Check-ins
+          TED<span className="text-[#ff0000]">x</span> Check-ins
         </motion.h1>
         <motion.p 
           className="text-xl sm:text-2xl md:text-3xl mb-6 sm:mb-8"
           variants={textVariants}
         >
-          TEDxAlgeria is a hub for groundbreaking ideas, innovation, and thought-provoking discussions.
+          TEDx is a hub for groundbreaking ideas, innovation, and thought-provoking discussions.
           Explore our past events that have left a mark and stay updated on upcoming editions that
           continue to push the boundaries of knowledge and creativity.
         </motion.p>

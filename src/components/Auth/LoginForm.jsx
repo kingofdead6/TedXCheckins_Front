@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { API_BASE_URL } from '../../../api';
@@ -152,15 +152,6 @@ function LoginForm() {
             </motion.button>
           </motion.div>
         </form>
-        <motion.p 
-          className="text-center text-sm text-gray-600 mt-5"
-          variants={formVariants}
-        >
-          Don't have an account?{' '}
-          <Link to="/register" className="text-[#d20000] hover:underline font-medium">
-            Register here
-          </Link>
-        </motion.p>
       </motion.div>
     </div>
   );
