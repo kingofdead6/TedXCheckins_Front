@@ -134,7 +134,7 @@ function EventList() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-red-50 p-4 sm:p-6">
+    <div className="min-h-screen  p-4 sm:p-6">
       <motion.div
         className="container mx-auto max-w-5xl bg-white bg-opacity-95 rounded-3xl border border-red-100 p-6 sm:p-8"
         initial={{ opacity: 0 }}

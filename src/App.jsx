@@ -6,10 +6,10 @@ import RegisterPage from './pages/Auth/RegisterPage';
 import EventsPage from './pages/User/EventsPage';
 import AttendeesPage from './pages/User/AttendeesPage';
 import ScanPage from './pages/User/ScanPage';
-import ProfilePage from './pages/ProfilePage';
-import AdminEventsPage from './pages/AdminEventsPage';
-import AdminUsersPage from './pages/AdminUsersPage';
-import AdminStatisticsPage from './pages/AdminStatisticsPage';
+import ProfilePage from './pages/User/ProfilePage';
+import AdminEventsPage from './pages/Admin/AdminEventsPage';
+import AdminUsersPage from './pages/Admin/AdminUsersPage';
+import AdminStatisticsPage from './pages/Admin/AdminStatisticsPage';
 
 function App() {
   return (

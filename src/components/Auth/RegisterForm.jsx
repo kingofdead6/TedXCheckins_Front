@@ -34,7 +34,7 @@ function RegisterForm() {
         password,
       });
       localStorage.setItem('token', res.data.token);
-      navigate('/events', { replace: true });
+      navigate('/login', { replace: true });
     } catch (err) {
       console.error('Registration error:', err.response?.data || err.message);
       setError(err.response?.data?.message || 'Registration failed');
