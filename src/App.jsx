@@ -1,16 +1,15 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Shared/Navbar';
-import HomePage from './pages/HomePage';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import EventsPage from './pages/EventsPage';
-import AttendeesPage from './pages/AttendeesPage';
-import ScanPage from './pages/ScanPage';
+import HomePage from './pages/Home/HomePage';
+import LoginPage from './pages/Auth/LoginPage';
+import RegisterPage from './pages/Auth/RegisterPage';
+import EventsPage from './pages/User/EventsPage';
+import AttendeesPage from './pages/User/AttendeesPage';
+import ScanPage from './pages/User/ScanPage';
 import ProfilePage from './pages/ProfilePage';
 import AdminEventsPage from './pages/AdminEventsPage';
 import AdminUsersPage from './pages/AdminUsersPage';
 import AdminStatisticsPage from './pages/AdminStatisticsPage';
-import AdminDashboardPage from './pages/AdminDashboardPage';
 
 function App() {
   return (
@@ -25,7 +24,6 @@ function App() {
           <Route path="/events/:eventId/attendees" element={<AttendeesPage />} />
           <Route path="/events/:eventId/scan" element={<ScanPage />} />
           <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
           <Route path="/admin/events" element={<AdminEventsPage />} />
           <Route path="/admin/users" element={<AdminUsersPage />} />
           <Route path="/admin/statistics" element={<AdminStatisticsPage />} />
